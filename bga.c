@@ -102,16 +102,19 @@ float *gadecode(int chrom[], int lo, int hi, int bits)
     // quant=(0.5.^[1:bits]’);     // quantization levels
     int *t_bits = create_array(bits);
     float *quant = element_wise_power(0.5, t_bits);
-    
+
+    // TODO
     // quant=quant/sum(quant);     // quantization levels normalized
 
     // ct=reshape(chrom’,bits,npar*M)’;    // each column contains one variable
+    float *ct = reshape(transpose(chrom), bits, npar*M);    // not transposed yet
 
     // par=((ct*quant)*(hi-lo)+lo);    // DA conversion and unnormalize varaibles
 
     // f=reshape(par,npar,M)’;     // reassemble population
-    return r;
-
+    float *f = reshape(par, npar, M);   // not transposed yet
+    
+    return f;
 }
 
 int rows(int arr[]) 
@@ -170,4 +173,29 @@ float *element_wise_power(float x, float arr[])
     }
 
     return p;
+}
+
+float *reshape(float arr[], int rows, int cols)
+{
+    float r[rows][cols];
+
+    int current_row = 0;
+    int current_col = 0;
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; i < cols; i++)
+        {
+            r[i][j] = arr[current_row][current_col];
+            current_col++;
+
+            if (current_col == cols)
+            {
+                current_col = 0;
+                ++current_row;
+            }
+        }
+    }
+
+    return r;
 }
