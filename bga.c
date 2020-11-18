@@ -99,9 +99,10 @@ float *gadecode(int chrom[], int lo, int hi, int bits)
 
     float npar = N/bits;    // number of variables
 
-    // TODO: IMPLEMENT TRANSPOSE FUNCTION
     // quant=(0.5.^[1:bits]’);     // quantization levels
-
+    int *t_bits = create_array(bits);
+    float *quant = element_wise_power(0.5, t_bits);
+    
     // quant=quant/sum(quant);     // quantization levels normalized
 
     // ct=reshape(chrom’,bits,npar*M)’;    // each column contains one variable
@@ -125,7 +126,48 @@ int cols(int arr[])
 
 int *transpose(int arr[]) 
 {
-    // calculate the transpose of a 2d array (swap rows and cols)
-    return arr;
+    // Swap rows and cols
+
+    int rows = rows(arr);
+    int cols = cols(arr);
+
+    int t[rows][cols];
+
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < cols; j++)
+        {
+            t[i][j] = arr[j][i];
+        }
+    }
+
+    return t;
 }
 
+int *create_array(int size)
+{
+    // Create an array of size n filled with numbers from 1 to n.
+    
+    int v[size];
+    for (int i = 0; i < size; i++)
+    {
+        v[i] = i;
+    }
+    
+    return v;
+}
+
+float *element_wise_power(float x, float arr[])
+{
+    // Calculate the power of x to every element in the array.
+
+    int size = sizeof(arr) / sizeof(arr[0]);
+    float p[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        p[i] = pow(x, arr[i]);
+    }
+
+    return p;
+}
