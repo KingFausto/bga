@@ -1,7 +1,7 @@
-// #include <stdio.h>
-// #include <math.h>
-// #include <time.h>
-// #include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+#include <stdlib.h>
 
 // Binary Genetic Algorithm
 // 
@@ -42,12 +42,13 @@ int main()
 
     int iga = 0;    // generation counter initialized
 
-    // TODO: IMPLEMENT ROUND AND RAND FUNCTIONS
-    int pop = round(random(popsize, Nt));  // random population of 1s and 0s
+    int *pop = random(popsize, Nt);  // random population of 1s and 0s
     
     // TODO: IMPLEMENT GADECODE
     float *par = gadecode(pop, 0, 10, nbits);   // convert binary to continuous values
     
+    // TODO: IMPLEMENT FEVAL
+    float *cost = feval(ff, par);   // calculates population cost using ff
     // __________________________________________________________________
     // De aqui en adelante, nada esta implementado
 
@@ -72,24 +73,18 @@ int main()
 }
 
 
-
-float *round(float arr[])
+int *random(int rows, int cols)
 {
-    // TODO: return the same matrix but with every value rounded to the nearest integer
-    return arr;
-}
+    // Generate a rows by cols matrix with 1s and 0s
 
-float *random(int rows, int cols)
-{
-    // TODO: generate a rows by cols matrix with random integers
-    float r[cols][rows];
-    srand((unsigned) time(&t));
+    float r[rows][cols];
+    srand(time(NULL));
 
-    for (int j = 0; j < cols; j++)
+    for (int i = 0; i < rows; i++)
     {
-        for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
         {
-            r[j][i] = (float)rand() % 1000 / 1000;
+            r[i][j] = rand() % 2;
         }
     }
     return r;
@@ -98,12 +93,13 @@ float *random(int rows, int cols)
 float *gadecode(int chrom[], int lo, int hi, int bits)
 {
     // TODO: genetic algorithm decode function
-    float *r;
 
-    // [M,N]=size(chrom);
+    float M = rows(chrom);
+    float N = cols(chrom);
 
-    // npar=N/bits;    // number of variables
+    float npar = N/bits;    // number of variables
 
+    // TODO: IMPLEMENT TRANSPOSE FUNCTION
     // quant=(0.5.^[1:bits]’);     // quantization levels
 
     // quant=quant/sum(quant);     // quantization levels normalized
@@ -116,3 +112,20 @@ float *gadecode(int chrom[], int lo, int hi, int bits)
     return r;
 
 }
+
+int rows(int arr[]) 
+{
+    return sizeof(arr) / sizeof(arr[0]);
+}
+
+int cols(int arr[]) 
+{
+    return sizeof(arr[0]) / sizeof(arr[0][0]);
+}
+
+int *transpose(int arr[]) 
+{
+    // calculate the transpose of a 2d array (swap rows and cols)
+    return arr;
+}
+
