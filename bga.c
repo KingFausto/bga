@@ -11,8 +11,7 @@
 // Haupt & Haupt
 // 2003
 
-int main()
-{
+int main() {
     // __________________________________________________________________
     // I. Setup the GA
 
@@ -64,35 +63,29 @@ int main()
     // __________________________________________________________________
     // Iterate through generations
 
-    while (iga < maxit)
-    {
+    while (iga < maxit) {
         iga =  iga + 1;     // increments generation counter
     }
 
     return 0;
 }
 
-
-int *random(int rows, int cols)
-{
-    // Generate a rows by cols matrix with 1s and 0s
+// Generate a rows by cols matrix with 1s and 0s
+int *random(int rows, int cols) {
 
     float r[rows][cols];
     srand(time(NULL));
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
             r[i][j] = rand() % 2;
         }
     }
     return r;
 }
 
-float *gadecode(int chrom[], int lo, int hi, int bits)
-{
-    // TODO: genetic algorithm decode function
+// Genetic algorithm decode function
+float *gadecode(int chrom[], int lo, int hi, int bits) {
 
     float M = rows(chrom);
     float N = cols(chrom);
@@ -107,95 +100,80 @@ float *gadecode(int chrom[], int lo, int hi, int bits)
     // quant=quant/sum(quant);     // quantization levels normalized
 
     // ct=reshape(chrom’,bits,npar*M)’;    // each column contains one variable
-    float *ct = reshape(transpose(chrom), bits, npar*M);    // not transposed yet
+    float *ct = reshape(transpose(chrom), bits, npar*M);    // TODO: not transposed yet
 
     // par=((ct*quant)*(hi-lo)+lo);    // DA conversion and unnormalize varaibles
 
     // f=reshape(par,npar,M)’;     // reassemble population
-    float *f = reshape(par, npar, M);   // not transposed yet
+    float *f = reshape(par, npar, M);   // TODO: not transposed yet
     
     return f;
 }
 
-int rows(int arr[]) 
-{
+int get_rows(int arr[]) {
     return sizeof(arr) / sizeof(arr[0]);
 }
 
-int cols(int arr[]) 
-{
+int get_cols(int arr[]) {
     return sizeof(arr[0]) / sizeof(arr[0][0]);
 }
 
-int *transpose(int arr[]) 
-{
-    // Swap rows and cols
+// Swap rows and cols
+int *transpose(int arr[]) {
 
-    int rows = rows(arr);
-    int cols = cols(arr);
+    int rows = get_rows(arr);
+    int cols = get_cols(arr);
 
     int t[rows][cols];
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
             t[i][j] = arr[j][i];
         }
     }
-
     return t;
 }
 
-int *create_array(int size)
-{
-    // Create an array of size n filled with numbers from 1 to n.
-    
+// Create an array of size n filled with numbers from 1 to n
+int *create_array(int size) {
+
     int v[size];
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++) {
         v[i] = i;
     }
-    
     return v;
 }
 
-float *element_wise_power(float x, float arr[])
-{
-    // Calculate the power of x to every element in the array.
+// Calculate the power of x to every element in the array
+float *element_wise_power(float x, float arr[]) {
 
     int size = sizeof(arr) / sizeof(arr[0]);
     float p[size];
 
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++) {
         p[i] = pow(x, arr[i]);
     }
-
     return p;
 }
 
-float *reshape(float arr[], int rows, int cols)
-{
+// Change the dimensions of a 2D array
+float *reshape(float arr[], int rows, int cols) {
+
     float r[rows][cols];
 
     int current_row = 0;
     int current_col = 0;
 
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; i < cols; i++)
-        {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; i < cols; i++) {
             r[i][j] = arr[current_row][current_col];
             current_col++;
 
-            if (current_col == cols)
-            {
+            if (current_col == cols) {
                 current_col = 0;
                 ++current_row;
             }
         }
     }
-
     return r;
 }
